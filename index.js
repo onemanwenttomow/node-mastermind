@@ -31,7 +31,7 @@ function start() {
   for (let opt = 0; opt < options.length; opt++) {
     options[opt] = " " + options[opt];
     if (opt === 0) {
-      input = options.length - 1;
+      input = 0;
       options[opt] += "\n";
       stdout.write(color(options[opt], cursorColor));
     } else {
