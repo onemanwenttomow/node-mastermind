@@ -30,7 +30,7 @@ function start() {
   stdout.write("Pick a colour" + "\n");
   for (let opt = 0; opt < options.length; opt++) {
     options[opt] = " " + options[opt];
-    if (opt === options.length - 1) {
+    if (opt === 0) {
       input = options.length - 1;
       options[opt] += "\n";
       stdout.write(color(options[opt], cursorColor));
@@ -40,6 +40,7 @@ function start() {
     }
     cursorLocs.y = opt + 1;
   }
+  cursorLocs.y = 1;
   stdout.write("\n");
   stdout.write("\n");
   stdout.write("[ _ _ _ _ ]");
@@ -186,6 +187,7 @@ function ctrlc() {
   stdin.setRawMode(false);
   stdin.pause();
   showCursor();
+  console.clear();
 }
 
 function upArrow() {
