@@ -50,7 +50,7 @@ function start() {
   for (let i = 0; i < 12; i++) {
     stdout.write(guessRow);
   }
-  console.log(computer);
+  // console.log(computer);
   stdin.setRawMode(true);
   stdin.resume();
   stdin.setEncoding("utf-8");
