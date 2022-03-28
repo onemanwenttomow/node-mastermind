@@ -5,13 +5,24 @@ const l = console.log;
 const stdout = process.stdout;
 const stdin = process.stdin;
 
+function random(num) {
+  return Math.floor(Math.random() * num);
+}
+
 function select({ question, answers, options, pointer, cursorColor }) {
+  const computer = [
+    answers[random(options.length)],
+    answers[random(options.length)],
+    answers[random(options.length)],
+    answers[random(options.length)]
+  ];
   let input;
   let cursorLocs = {
     x: 0,
     y: 0
   };
   let selectedColours = [];
+  let results = [];
   let currentGuess = 0;
 
   function start() {
@@ -37,7 +48,7 @@ function select({ question, answers, options, pointer, cursorColor }) {
     for (let i = 0; i < 12; i++) {
       stdout.write(guessRow);
     }
-
+    // console.log(computer);
     stdin.setRawMode(true);
     stdin.resume();
     stdin.setEncoding("utf-8");
@@ -94,11 +105,6 @@ function select({ question, answers, options, pointer, cursorColor }) {
   }
 
   function enter() {
-    // TODO generate random computer input
-    // TODO IF row is full then check if any of the colors are correct and in correct position
-    // display that after the row
-    // i.e. 🟢🔵🟡🔴 .... (using coloured dots)
-    // TODO check for victory
     // TODO check for defeat (i.e. did not guess in certain number of turns)
 
     // add the next row of guesses
@@ -118,13 +124,45 @@ function select({ question, answers, options, pointer, cursorColor }) {
     // add answer to correct sub array
     selectedColours[currentGuess].push(answers[input]);
 
+    // TODO IF row is full then check if any of the colors are correct and in correct position
+    // display that after the row
+    // i.e. 🟢🔵🟡🔴 .... (using coloured dots)
+    let result = "";
+    let correct = 0;
+    if (selectedColours[currentGuess].length >= 4) {
+      let g = selectedColours[currentGuess].slice();
+      let c = computer.slice();
+      for (let i = 0; i < computer.length; i++) {
+        if (computer[i] === selectedColours[currentGuess][i]) {
+          result += color(".", "red");
+          correct++;
+          g[i] = "*";
+          c[i] = "";
+        }
+      }
+      for (let i = 0; i < computer.length; i++) {
+        if (c.includes(g[i])) {
+          result += ".";
+        }
+      }
+
+      results.push(result);
+    }
+
     // generate output to be printed to the screen
     let output = "";
     for (let i = 0; i < selectedColours.length; i++) {
-      output += " " + selectedColours[i].join("") + "\n";
+      const o = results[i] || "";
+      output += " " + selectedColours[i].join("") + "\t" + o + "\n";
     }
 
     l(output);
+
+    if (correct === 4) {
+      // TODO check for victory
+      rdl.cursorTo(stdout, 0, options.length + 19);
+      return l("  🎉🎉🎉 CONGRATS 🎉🎉🎉");
+    }
 
     // use this to exit the game later...
     // stdin.removeListener("data", pn);
