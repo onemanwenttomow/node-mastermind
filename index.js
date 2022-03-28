@@ -164,7 +164,7 @@ function checkBoard() {
     let g = selectedColours[currentGuess].slice();
     let c = computer.slice();
     for (let i = 0; i < computer.length; i++) {
-      if (computer[i] === selectedColours[currentGuess][i]) {
+      if (computer[i] === g[i]) {
         hints += color(".", "red");
         correct++;
         g[i] = "*";
@@ -174,7 +174,7 @@ function checkBoard() {
     for (let i = 0; i < computer.length; i++) {
       if (c.includes(g[i])) {
         hints += ".";
-        c.splice(i - 1, 1);
+        c.splice(c.indexOf(g[i]), 1);
       }
     }
 
