@@ -136,9 +136,17 @@ function select({ question, answers, options, pointer, cursorColor }) {
     l(output);
 
     if (correct === 4) {
-      // TODO check for victory
+      rdl.cursorTo(stdout, 0, options.length + 3);
+      l("[ " + computer.join("") + " ]");
       rdl.cursorTo(stdout, 0, options.length + 19);
       return l("  🎉🎉🎉 CONGRATS 🎉🎉🎉");
+    }
+
+    if (currentGuess >= 11 && selectedColours[currentGuess].length >= 4) {
+      rdl.cursorTo(stdout, 0, options.length + 3);
+      l("[ " + computer.join("") + " ]");
+      rdl.cursorTo(stdout, 0, options.length + 19);
+      return l("  😥😥😥 BETTER LUCK NEXT TIME 😥😥😥");
     }
 
     // use this to exit the game later...
