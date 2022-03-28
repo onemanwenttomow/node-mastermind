@@ -1,6 +1,6 @@
 // inspired by https://blog.bitsrc.io/build-a-select-options-for-the-terminal-using-nodejs-e2d699cc85fe
 
-import rdl from "readline";
+const rdl = require("readline");
 const l = console.log;
 const stdout = process.stdout;
 const stdin = process.stdin;
