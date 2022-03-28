@@ -174,6 +174,8 @@ function checkBoard() {
     for (let i = 0; i < computer.length; i++) {
       if (c.includes(g[i])) {
         hints += ".";
+        g[i] = "*";
+        c[i] = "";
       }
     }
 
