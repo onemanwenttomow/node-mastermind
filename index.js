@@ -20,7 +20,7 @@ let cursorLocs = {
   y: 0
 };
 let selectedColours = [];
-let results = [];
+let rowHints = [];
 let currentGuess = 0;
 
 console.clear();
@@ -106,8 +106,6 @@ function pn() {
 }
 
 function enter() {
-  // TODO check for defeat (i.e. did not guess in certain number of turns)
-
   // add the next row of guesses
   if (!selectedColours[currentGuess]) {
     selectedColours.push([]);
@@ -130,24 +128,18 @@ function enter() {
   // generate output to be printed to the screen
   let output = "";
   for (let i = 0; i < selectedColours.length; i++) {
-    const o = results[i] || "";
-    output += " " + selectedColours[i].join("") + "\t" + o + "\n";
+    const hints = rowHints[i] || "";
+    output += " " + selectedColours[i].join("") + "\t" + hints + "\n";
   }
 
   l(output);
 
   if (correct === 4) {
-    rdl.cursorTo(stdout, 0, options.length + 3);
-    l("[ " + computer.join("") + " ]");
-    rdl.cursorTo(stdout, 0, options.length + 19);
-    return l("  🎉🎉🎉 CONGRATS 🎉🎉🎉");
+    endMessage("  🎉🎉🎉 CONGRATS 🎉🎉🎉");
   }
 
   if (currentGuess >= 11 && selectedColours[currentGuess].length >= 4) {
-    rdl.cursorTo(stdout, 0, options.length + 3);
-    l("[ " + computer.join("") + " ]");
-    rdl.cursorTo(stdout, 0, options.length + 19);
-    return l("  😥😥😥 BETTER LUCK NEXT TIME 😥😥😥");
+    endMessage("  😥😥😥 BETTER LUCK NEXT TIME 😥😥😥");
   }
 
   // use this to exit the game later...
@@ -157,15 +149,22 @@ function enter() {
   // showCursor();
 }
 
+function endMessage(text) {
+  rdl.cursorTo(stdout, 0, options.length + 3);
+  l("[ " + computer.join("") + " ]");
+  rdl.cursorTo(stdout, 0, options.length + 19);
+  return l(text);
+}
+
 function checkBoard() {
-  let result = "";
+  let hints = "";
   let correct = 0;
   if (selectedColours[currentGuess].length >= 4) {
     let g = selectedColours[currentGuess].slice();
     let c = computer.slice();
     for (let i = 0; i < computer.length; i++) {
       if (computer[i] === selectedColours[currentGuess][i]) {
-        result += color(".", "red");
+        hints += color(".", "red");
         correct++;
         g[i] = "*";
         c[i] = "";
@@ -173,11 +172,11 @@ function checkBoard() {
     }
     for (let i = 0; i < computer.length; i++) {
       if (c.includes(g[i])) {
-        result += ".";
+        hints += ".";
       }
     }
 
-    results.push(result);
+    rowHints.push(hints);
   }
   return { correct };
 }
