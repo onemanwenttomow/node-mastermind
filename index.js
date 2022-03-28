@@ -124,30 +124,7 @@ function select({ question, answers, options, pointer, cursorColor }) {
     // add answer to correct sub array
     selectedColours[currentGuess].push(answers[input]);
 
-    // TODO IF row is full then check if any of the colors are correct and in correct position
-    // display that after the row
-    // i.e. 🟢🔵🟡🔴 .... (using coloured dots)
-    let result = "";
-    let correct = 0;
-    if (selectedColours[currentGuess].length >= 4) {
-      let g = selectedColours[currentGuess].slice();
-      let c = computer.slice();
-      for (let i = 0; i < computer.length; i++) {
-        if (computer[i] === selectedColours[currentGuess][i]) {
-          result += color(".", "red");
-          correct++;
-          g[i] = "*";
-          c[i] = "";
-        }
-      }
-      for (let i = 0; i < computer.length; i++) {
-        if (c.includes(g[i])) {
-          result += ".";
-        }
-      }
-
-      results.push(result);
-    }
+    const { correct } = checkBoard();
 
     // generate output to be printed to the screen
     let output = "";
@@ -169,6 +146,31 @@ function select({ question, answers, options, pointer, cursorColor }) {
     // stdin.setRawMode(false);
     // stdin.pause();
     // showCursor();
+  }
+
+  function checkBoard() {
+    let result = "";
+    let correct = 0;
+    if (selectedColours[currentGuess].length >= 4) {
+      let g = selectedColours[currentGuess].slice();
+      let c = computer.slice();
+      for (let i = 0; i < computer.length; i++) {
+        if (computer[i] === selectedColours[currentGuess][i]) {
+          result += color(".", "red");
+          correct++;
+          g[i] = "*";
+          c[i] = "";
+        }
+      }
+      for (let i = 0; i < computer.length; i++) {
+        if (c.includes(g[i])) {
+          result += ".";
+        }
+      }
+
+      results.push(result);
+    }
+    return { correct };
   }
 
   function ctrlc() {
